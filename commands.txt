@@ -1,0 +1,17 @@
+git config --global user.name giovannagrigo
+git config --global user.email giovanna1grigo@gmail.com
+
+dotnet new sln --name RigoStore
+dotnet new mvc -o RigoStore
+dotnet sln add RigoStore\RigoStore.csproj
+
+cd RigoStore
+
+dotnet add package Microsoft.EntityFrameworkCore --version 9.0.2
+dotnet add package Microsoft.EntityFrameworkCore.Design --version 9.0.2
+dotnet add package Microsoft.EntityFrameworkCore.Tools --version 9.0.2
+dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 9.0.2
+dotnet add package MySql.EntityFrameworkCore --version 9.0.0
+
+Criar as classes da camada de dados (Models)
+
