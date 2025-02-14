@@ -1,7 +1,24 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using RigoStore.Data;
+using RigoStore.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Conexão com o Banco de Dados
+string conexao = builder.Configuration.GetConnectionString("RigoStoreConn");
+builder.Services.AddDbContext<AppDbContext>(
+    options => options.UseMySQL(conexao)  
+);
+
+// Configuração do Identity
+builder.Services.AddIdentity<Usuario, IdentityRole>(
+    options => options.SignIn.RequireConfirmedEmail = false 
+).AddEntityFrameworkStores<AppDbContext>()
+.AddDefaultTokenProviders();
 
 var app = builder.Build();
 
