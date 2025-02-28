@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RigoStore.Models;
 using RigoStore.Data;
 using Microsoft.EntityFrameworkCore;
+using RigoStore.ViewModels;
 
 namespace RigoStore.Controllers;
 
@@ -26,6 +27,24 @@ public class HomeController : Controller
     public IActionResult Privacy()
     {
         return View();
+    }
+
+    public IActionResult Produto(int id)
+    {
+        Produto produto = _db.Produtos
+            .Where(p => p.Id == id)
+            .Include(p => p.Categoria)
+            .Include(p => p.Fotos)
+            .SingleOrDefault();
+
+        ProdutoVM produtoVM = new() {
+            Produto = produto
+        };
+        produtoVM.Produtos = _db.Produtos
+            .Where(p => produto.CategoriaId == produto.CategoriaId)
+            .Take(4).ToList();
+
+        return View(produtoVM);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
