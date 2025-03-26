@@ -114,21 +114,21 @@ namespace RigoStore.Controllers
                 {
                    if (Arquivo != null)
                    {
-                    string filename = categoria.Id + Path.GetExtension(Arquivo.FileName);
-                    string caminho = Path.Combine(_host.WebRootPath, "img\\categorias");
-                    string novoArquivo = Path.Combine(caminho, filename);
-                    using (var stream = new FileStream(novoArquivo, FileMode.Create))
-                    {
-                        Arquivo.CopyTo(stream);
+                        string filename = categoria.Id + Path.GetExtension(Arquivo.FileName);
+                        string caminho = Path.Combine(_host.WebRootPath, "img\\categorias");
+                        string novoArquivo = Path.Combine(caminho, filename);
+                        using (var stream = new FileStream(novoArquivo, FileMode.Create))
+                        {
+                            Arquivo.CopyTo(stream);
+                        }
+                        categoria.Foto = "\\img\\categorias\\" + filename;
                     }
-                    categoria.Foto = "\\img\\categorias\\" + filename;
-                   }
-                   if(string.IsNullOrEmpty(categoria.Foto)){
+                    if(string.IsNullOrEmpty(categoria.Foto)){
                         Categoria categoriaAntiga = await _context.Categorias.AsNoTracking().FirstOrDefaultAsync(c => c.Id == categoria.Id);
                         categoria.Foto = categoriaAntiga.Foto;
-                   }
-                   _context.Update(categoria);
-                   await _context.SaveChangesAsync();
+                    }
+                    _context.Update(categoria);
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
