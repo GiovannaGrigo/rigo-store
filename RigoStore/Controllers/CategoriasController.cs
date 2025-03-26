@@ -102,19 +102,33 @@ namespace RigoStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Foto")] Categoria categoria)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Foto")] Categoria categoria, IFormFile Arquivo)
         {
             if (id != categoria.Id)
             {
                 return NotFound();
             }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(categoria);
-                    await _context.SaveChangesAsync();
+                   if (Arquivo != null)
+                   {
+                    string filename = categoria.Id + Path.GetExtension(Arquivo.FileName);
+                    string caminho = Path.Combine(_host.WebRootPath, "img\\categorias");
+                    string novoArquivo = Path.Combine(caminho, filename);
+                    using (var stream = new FileStream(novoArquivo, FileMode.Create))
+                    {
+                        Arquivo.CopyTo(stream);
+                    }
+                    categoria.Foto = "\\img\\categorias\\" + filename;
+                   }
+                   if(string.IsNullOrEmpty(categoria.Foto)){
+                        Categoria categoriaAntiga = await _context.Categorias.AsNoTracking().FirstOrDefaultAsync(c => c.Id == categoria.Id);
+                        categoria.Foto = categoriaAntiga.Foto;
+                   }
+                   _context.Update(categoria);
+                   await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -127,6 +141,7 @@ namespace RigoStore.Controllers
                         throw;
                     }
                 }
+                TempData["Success"] = "Categoria alterada com sucesso!";
                 return RedirectToAction(nameof(Index));
             }
             return View(categoria);
@@ -162,6 +177,7 @@ namespace RigoStore.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["Success"] = "Categoria excluída com sucesso!";
             return RedirectToAction(nameof(Index));
         }
 
