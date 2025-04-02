@@ -15,6 +15,7 @@
                 <div class="card-body">
                     <form asp-action="Login" method="post">
                         <div asp-validation-summary="ModelOnly" hidden></div>
+                        <input type="hidden" asp-for="UrlRetorno">
                         <div class="form-floating mb-3">
                             <input class="form-control" asp-for="Email">
                             <label asp-for="Email"></label>
