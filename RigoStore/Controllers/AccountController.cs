@@ -79,6 +79,12 @@ public class AccountController : Controller
         return RedirectToAction("Index", "Home");
     }
 
+    [HttpGet]
+    public ActionResult Registro(){
+        RegistroVM register = new();
+        return View(register);
+    }
+
     public bool IsValidEmail (string email){
         try
         {
