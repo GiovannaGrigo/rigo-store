@@ -13,7 +13,7 @@ public class Usuario : IdentityUser
 
     [DataType(DataType.Date)]
     [Display(Name = "Data de Nscimento")]
-    public DateTime DataNascimento { get; set; }
+    public DateTime? DataNascimento { get; set; }
 
     [StringLength(300)]
     public string Foto { get; set; }
